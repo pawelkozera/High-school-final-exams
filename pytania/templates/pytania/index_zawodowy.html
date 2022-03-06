@@ -1,0 +1,24 @@
+{% extends "pytania/base.html" %}
+
+
+{% block title %}
+	Ez Zawód
+{% endblock %}
+
+{% block logo_title %}
+	Ez Zawód
+{% endblock %}
+
+{% block content %}
+	{% if zawodowy_groups %}
+		<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		{% for groups in zawodowy_groups %}
+			<h2 class="question_answer_text question_answer_text_options" style="margin-top: 10px;"> <a href="{% url 'pytania:question_options' groups.group %}"> {{ groups.group.title|to_space }} </a> </h2>
+		{% endfor %}
+		</div>
+	{% else %}
+		<p> Brak egzaminów </p>
+	{% endif %}
+{% endblock %}

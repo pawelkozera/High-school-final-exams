@@ -1,0 +1,20 @@
+{% extends "pytania/base.html" %}
+
+
+{% block title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block logo_title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block content %}
+	<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		<p class="question_answer_text question_answer_text_options"> <a href="{% url 'pytania:question_display' group_name %}"> Pojedyncze pytanie </a> </p> <br>
+		<p class="question_answer_text question_answer_text_options"> <a href="{% url 'pytania:random_test_number_selecting' group_name %}"> Test z losowych pytań </a> </p> <br>
+		<p class="question_answer_text question_answer_text_options"> <a href="{% url 'pytania:test_selecting' group_name %}"> Test z konkretnego roku </a> </p>
+	</div> 
+{% endblock %}

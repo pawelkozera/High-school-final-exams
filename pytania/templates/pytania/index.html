@@ -1,0 +1,24 @@
+{% extends "pytania/base.html" %}
+
+
+{% block title %}
+	Ez Matura
+{% endblock %}
+
+{% block logo_title %}
+	Ez Matura
+{% endblock %}
+
+{% block content %}
+	{% if matura_groups %}
+		<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		{% for groups in matura_groups %}
+			<h2 class="question_answer_text question_answer_text_options" style="margin-top: 10px;"> <a href="{% url 'pytania:question_options' groups.group %}"> {{ groups.group.title|to_space }} </a> </h2>
+		{% endfor %}
+		</div>
+	{% else %}
+		<p> Brak egazminów </p>
+	{% endif %}
+{% endblock %}

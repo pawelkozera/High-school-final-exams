@@ -1,0 +1,20 @@
+{% extends "pytania/base.html" %}
+
+
+{% block title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block logo_title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block content %} 
+	<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		{% for exam in all_exams|dictsortreversed:"exam_year" %}
+			<p class="question_answer_text question_answer_text_options" style="margin-top: 10px;"> <a href="{% url 'pytania:generated_test' group_name exam.exam_name 0 %}"> {{ exam.exam_name.title|to_space }} </a> </p>
+		{% endfor %}
+	</div>
+{% endblock %}

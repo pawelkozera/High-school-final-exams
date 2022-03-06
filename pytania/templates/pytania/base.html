@@ -1,0 +1,50 @@
+{% load static %}
+
+<script>
+MathJax = {
+  loader: {load: ['input/asciimath', 'output/chtml']}
+}
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/startup.js">
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title> {% block title %}{% endblock %} </title>
+	<link href="{% static "pytania/style.css" %}" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Oswald:wght@500&display=swap" rel="stylesheet">
+	<meta charset="UTF-8">
+  <meta name="description" content="Interaktywne testy online z matur i egzaminów zawodowych. Możliwość generowania losowych testów maturalnych albo wybrania już istniejącego.">
+  <meta name="keywords" content="matura, testy, pytania, egzamin, egzamin_zawodowy, test_online, matura_pytania, matura_test">
+  <meta name="author" content="Paweł Kozera">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+</head>
+<body>
+	<div class="container">
+		<div class="logo">
+			<h1>
+				{% block logo_title %}
+				{% endblock %}
+			</h1>
+		</div>
+		<div class="navbar">
+			<ul>
+		  		<li> <h2> <a href="{% url 'pytania:index' %}"> Matura </a> </h2> </li>
+		  		<li> <h2> <a href="{% url 'pytania:index_zawodowy' %}"> Egzaminy zawodowe </a> </h2> </li>
+		  		<li> <h2> <a href="{% url 'pytania:contact' %}"> Kontakt </a> </h2> </li>
+		  	</ul>
+		</div>
+		<div class="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+		<div class="footer">
+			Paweł Kozera </br>
+			2021 &copy
+		</div>
+	</div>
+</body>
+</html>

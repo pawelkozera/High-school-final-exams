@@ -1,0 +1,161 @@
+{% extends "pytania/base.html" %}
+
+
+{% block title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block logo_title %}
+	{{ group_name.title|to_space }}
+{% endblock %}
+
+{% block content %}
+	<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		{% if random_question.text_question %}
+			<button onclick="show_text('{{forloop.counter0}}')" id="show_text_button{{forloop.counter0}}" class="show_text"> Pokaż tekst do pytania </button>
+			<input type="text" style="display: none;" id="quest_text_storage{{forloop.counter0}}" value="{{ random_question.text_question|linebreaks }}" />
+			<p id="quest_text{{forloop.counter0}}" class="text_for_question_area question_answer_text" style="display: none; margin-top: 10px;">  <p>
+		{% endif %}
+
+		<h3 class="question_answer_text"> Pytanie: </h3>
+		<p class="text_for_question_area"> {{ random_question.question_text }} </p>
+		{% if random_question.question_image %}
+			<img id="myBtn" src="{{random_question.question_image.url}}" class="question_image" onclick="modal_button('myModal')"/>
+			<br> <br>
+			<div id="myModal" class="modal">
+			  <div class="modal-content">
+			    <span class="close" id="close_span" onclick="modal_span('myModal')">&times;</span>
+			    <img src="{{random_question.question_image.url}}" class="question_image_modal"/>
+			  </div>
+			</div>
+		{% endif %}
+
+		<h3 class="question_answer_text"> Odpowiedź: </h3>
+		{% if answers.0 == "" or answers.1 == "" or answers.2 == "" or answers.3 == "" %}
+			<p> <input type="text" name="answer_text" class="answer_field" id="answer_field_input" value=""/> </p>
+			<p> <input type="button" id="check_answers_button" class="show_text" onclick="check_answer('answer_field_input')" value="Sprawdź pytanie" /> </p>
+		{% else %}
+			{% for answer in answers %}
+				<p> <button name="answer_text" class="answer_field" id="answer_field{{ forloop.counter0 }}" value="{{ answer }}" onclick="check_answer('answer_field{{ forloop.counter0 }}')"> {{ answer }} </button> </p>
+			{% endfor %}
+		{% endif %}
+		{% if random_question.example_answer %}
+			<button class="show_text example_answer_button" onclick="example_answer_show()" style="display: none;"> Pokaż rozwiązanie </button>
+			<p class="question_answer_text question_answer_text_options" id="example_answer_field" style="margin-top: 10px; display: none;"> {{ random_question.example_answer }} </p>
+		{% endif %}
+	</div>
+	<div class="question_area" id="result_area" style="display: none;">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		<h3 id="result" class="question_answer_text"> </h3>
+	</div>
+	<button class="show_text"> <a href="{% url 'pytania:next_question_display' random_question.id %}" style="color: black;"> Następne pytanie </a> </button>
+
+	<script type="text/javascript">
+		function modal_button(modal_id) {
+			document.getElementById(modal_id).style.display = 'block';
+		}
+
+		function modal_span(modal_id) {
+			document.getElementById(modal_id).style.display = 'none';
+		}
+
+		window.onclick = function(event) {
+			var modal = document.getElementById('myModal');
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
+
+		function check_answer(answer_pointer) {
+			var correct_answer = '{{ correct_answer }}';
+			document.getElementById('result_area').style.display = 'block';
+
+			if (answer_pointer != 'answer_field_input') {
+				check_multiple_choice_answer(answer_pointer);
+			}
+			else {
+				check_input_answer(answer_pointer);
+			}
+			
+			show_example_answer_button();
+		}
+
+		function check_multiple_choice_answer(answer_pointer) {
+			var correct_answer = '{{ correct_answer }}';
+			var answers_counter = document.getElementsByClassName("answer_field");
+			var answers_len = answers_counter.length;
+			var user_answer = document.getElementById(answer_pointer);
+			
+			if (user_answer.value == correct_answer) {
+				user_answer.style.backgroundColor = 'green';
+				document.getElementById('result').innerHTML = 'Gratulacje!';
+			}
+			else {
+				user_answer.style.backgroundColor = 'red';
+				document.getElementById('result').innerHTML = 'Niestety! Zła odpowiedź!';
+				for (var i = 0; i < answers_len; i++) {
+					if (answers_counter[i].value == correct_answer) {
+						answers_counter[i].style.backgroundColor = 'green';
+					}
+				}
+			}
+			for (var i = 0; i < answers_len; i++) {
+				answers_counter[i].disabled = true;
+			}
+		}
+
+		function check_input_answer(answer_pointer) {
+			var correct_answer = '{{ correct_answer }}';
+			var user_answer = document.getElementById(answer_pointer);
+
+			if (user_answer.value.toLowerCase() == correct_answer.toLowerCase()) {
+				user_answer.style.backgroundColor = 'green';
+				document.getElementById('result').innerHTML = 'Gratulacje!';
+			}
+			else {
+				user_answer.style.backgroundColor = 'red';
+				document.getElementById('result').innerHTML = 'Niestety! Zła odpowiedź!';
+			}
+			var answer_field = document.getElementsByClassName("answer_field");
+			answer_field[0].disabled = true;
+		}
+
+		function show_example_answer_button() {
+			var button_example_answers = document.getElementsByClassName('example_answer_button');
+
+			if (button_example_answers.length > 0) {
+				for(var i = 0; i < button_example_answers.length; i++) {
+					button_example_answers[i].style.display = 'block';
+					button_example_answers[i].style.margin = '0 auto';
+				}
+			}
+		}
+
+		function show_text(quest_id) {
+			var text = document.getElementById('quest_text' + quest_id);
+			if (text.style.display === 'none') {
+				text.style.display = 'block';
+				var text_storage = document.getElementById('quest_text_storage' + quest_id).value
+				document.getElementById('show_text_button' + quest_id).innerHTML = 'Ukryj tekst';
+				text.innerHTML = text_storage;
+			}
+			else {
+				text.style.display = 'none';
+				document.getElementById('show_text_button' + quest_id).innerHTML = 'Pokaż tekst do pytania';
+			}
+		}
+
+		function example_answer_show() {
+			var example_answer = document.getElementById('example_answer_field');
+			if (example_answer.style.display === 'none') {
+				example_answer.style.display = 'block';
+			}
+			else {
+				example_answer.style.display = 'none';
+			}
+		}
+	</script>
+{% endblock %}

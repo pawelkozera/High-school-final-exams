@@ -1,0 +1,28 @@
+{% extends "pytania/base.html" %}
+
+{% block title %}
+	Ez Matura
+{% endblock %}
+
+{% block logo_title %}
+	Ez Matura
+{% endblock %}
+
+{% block content %}
+	<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		<p class="question_answer_text" style="margin-top: 10px;"> Kontakt </p>
+		<p class='text_for_question_area'> testuser@gmail.com </p>
+	</div>
+
+	<div class="question_area">
+		<div class="dots_left"></div>
+		<div class="dots_right"></div>
+		<p class="question_answer_text" style="margin-top: 10px;"> Pomoc </p>
+		<p class='text_for_question_area'> Jeśli potrzebujesz pomocy mentalnej, możesz ją znależć tutaj: </p>
+		<p class='text_for_question_area'> <a href="http://samobojstwo.pl/" target="_blank"> http://samobojstwo.pl/ </a> </p>
+		{% load static %}
+		<img id="myBtn" src="{% static 'pytania/panda.png' %}" class="question_image"/ alt="matura kontakt">
+	</div>
+{% endblock %}
